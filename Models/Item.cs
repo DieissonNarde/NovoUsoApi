@@ -12,11 +12,9 @@ namespace NovoUsoApi.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Quantity { get; set; }
-   
-        public string TypeOffer { get; set; }
         public string Duration { get; set; }
         public string Value { get; set; }
-
+        public TypeOffer TypeOffer { get; set; }
         public ItemStatus Status { get; set; } = ItemStatus.Published;
         public string? CancellationReason { get; set; }
 
