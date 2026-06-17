@@ -1,0 +1,84 @@
+# Build artifacts
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Pp]ublish/
+TestResults/
+artifacts/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# IDE folders
+.vs/
+.idea/
+*.code-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# Logs
+*.log
+logs/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+!**/packages/build/
+.nuget/
+
+# EF Core / database local files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Secrets / local config
+secrets.json
+appsettings.Local.json
+appsettings.*.local.json
+.env
+.env.*
+
+# ASP.NET Core user secrets (local machine)
+.microsoft/usersecrets/
+
+# Generated files
+Generated\\ Files/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage / reports
+coverage/
+coverage-report/
+*.coverage
+*.coveragexml
+
+# Tooling caches
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Azure / publish profiles
+*.Publish.xml
+*.pubxml.user
+
+# Node (if frontend/build tooling is added later)
+node_modules/
+dist/
+
+# Optional: ignore development settings if your team stores secrets there
+# appsettings.Development.json
