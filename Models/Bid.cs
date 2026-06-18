@@ -16,10 +16,10 @@ namespace NovoUsoApi.Models
 
         public ProposalType ProposalType { get; set; }
 
-        public Guid ItemId { get; set; }
+        public int ItemId { get; set; }
         public Item Item { get; set; } = null!;
 
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; } = null!;
     }
 }

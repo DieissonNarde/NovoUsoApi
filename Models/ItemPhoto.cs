@@ -7,14 +7,12 @@ namespace NovoUsoApi.Models
 {
     public class ItemPhoto
     {
-        public Guid ItemId { get; set; }
-        public Item Item { get; set; } = null!;
-
+        public int Id { get; set; }
         public required string FileName { get; set; }
         public required string ContentType { get; set; }
         public required string Url { get; set; }
 
-        public bool IsCover { get; set; }
-        public int DisplayOrder { get; set; }
+        public int ItemId { get; set; }
+        public Item Item { get; set; } = null!;
     }
 }

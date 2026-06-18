@@ -8,10 +8,10 @@ namespace NovoUsoApi.Models
 {
     public class ItemAgreement
     {
-         public Guid ItemId { get; set; }
+         public int ItemId { get; set; }
         public Item Item { get; set; } = null!;
 
-        public Guid WinningBidId { get; set; }
+        public int WinningBidId { get; set; }
         public Bid WinningBid { get; set; } = null!;
 
         public AgreementStatus Status { get; set; } = AgreementStatus.PendingBoth;

@@ -18,14 +18,14 @@ namespace NovoUsoApi.Models
         public ItemStatus Status { get; set; } = ItemStatus.Published;
         public string? CancellationReason { get; set; }
 
-        public ICollection<ItemPhoto> Photos { get; set; } = [];
-        public ICollection<Bid> Bids { get; set; } = [];
+        public ICollection<ItemPhoto> Photos { get; set; } = new List<ItemPhoto>();
+        public ICollection<Bid> Bids { get; set; } = new List<Bid>();
         public ItemAgreement? Agreement { get; set; }
 
-        public Guid OwnerId { get; set; }
+        public int OwnerId { get; set; }
         public User Owner { get; set; } = null!;
 
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
     }
 }

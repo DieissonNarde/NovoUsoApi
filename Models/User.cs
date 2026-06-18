@@ -16,7 +16,7 @@ namespace NovoUsoApi.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
-        public ICollection<Item> Items { get; set; }
-        public ICollection<Bid> Bids { get; set; }
+        public ICollection<Item> Items { get; set; } = new List<Item>();
+        public ICollection<Bid> Bids { get; set; } = new List<Bid>();
     }
 }
