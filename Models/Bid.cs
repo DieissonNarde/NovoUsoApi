@@ -13,7 +13,6 @@ namespace NovoUsoApi.Models
         public string Value { get; set; }
         public string Description { get; set; }
         public BidStatus Status { get; set; }
-
         public ProposalType ProposalType { get; set; }
 
         public int ItemId { get; set; }

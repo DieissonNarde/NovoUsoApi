@@ -8,18 +8,17 @@ namespace NovoUsoApi.Models
 {
     public class ItemAgreement
     {
-         public int ItemId { get; set; }
-        public Item Item { get; set; } = null!;
-
-        public int WinningBidId { get; set; }
-        public Bid WinningBid { get; set; } = null!;
-
+        public int Id { get; set; }
         public AgreementStatus Status { get; set; } = AgreementStatus.PendingBoth;
-
         public DateTime? OwnerAcceptedAtUtc { get; set; }
         public DateTime? WinnerAcceptedAtUtc { get; set; }
         public DateTime? ClosedAtUtc { get; set; }
-
         public string? RejectionReason { get; set; }
+
+        public int ItemId { get; set; }
+        public Item Item { get; set; } = null!;
+
+        public int BidId { get; set; }
+        public Bid Bid { get; set; } = null!;
     }
 }
