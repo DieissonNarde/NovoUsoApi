@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
 
@@ -9,29 +11,48 @@ namespace NovoUsoApi.Repositories
 {
     public class ItemRepository : IItemRepository
     {
-        public Task<Item> AddAsync(Item item)
+        private readonly AppDbContext _context;
+
+        public ItemRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        
+        public async Task<Item> AddAsync(Item item)
+        {
+            _context.Item.Add(item);
+            await _context.SaveChangesAsync();
+            return item;
         }
 
-        public Task<Item> DeleteAsync(int id)
+        public async Task<Item> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var item = await _context.Item.FindAsync(id);
+            
+            if(item == null)
+            {
+                return null;
+            }
+
+            await _context.SaveChangesAsync();
+            return item;
         }
 
-        public Task<List<Item>> GetAllAsync()
+        public async Task<List<Item>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Item.ToListAsync();
         }
 
-        public Task<Item> GetByIdAsync(int id)
+        public async Task<Item> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Item.FindAsync(id);
         }
 
-        public Task<Item> UpdateAsync(Item item)
+        public async Task<Item> UpdateAsync(Item item)
         {
-            throw new NotImplementedException();
+            _context.Item.Update(item);
+            await _context.SaveChangesAsync();
+            return item;
         }
     }
 }
