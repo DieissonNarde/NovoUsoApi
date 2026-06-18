@@ -21,11 +21,14 @@ namespace NovoUsoApi.Data.Configurations
             builder.Property(i => i.Status);
             builder.Property(i => i.CancellationReason).HasMaxLength(100);
 
-            builder.HasOne(i => i.Owner).WithMany(i => i.Items)
-                                        .HasForeignKey(i => i.OwnerId)
+            builder.HasOne(i => i.User).WithMany(i => i.Items)
+                                        .HasForeignKey(i => i.UserId)
                                         .OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(i => i.Category).WithMany(i => i.Items)
                                         .HasForeignKey(i => i.CategoryId)
+                                        .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(i => i.Address).WithMany(i => i.Items)
+                                        .HasForeignKey(i => i.AddressId)
                                         .OnDelete(DeleteBehavior.NoAction);
         }
     }

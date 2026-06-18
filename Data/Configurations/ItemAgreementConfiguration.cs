@@ -8,15 +8,21 @@ namespace NovoUsoApi.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ItemAgreement> builder)
         {
-            builder.HasKey(x => x.ItemId);
+            builder.HasKey(i => i.Id);
+            builder.Property(i => i.Status);
+            builder.Property(i => i.OwnerAcceptedAtUtc);
+            builder.Property(i => i.WinnerAcceptedAtUtc);
+            builder.Property(i => i.ClosedAtUtc);
+            builder.Property(i => i.RejectionReason);
 
-            builder.HasOne(x => x.Item)
-                .WithOne(i => i.Agreement)
-                .HasForeignKey<ItemAgreement>(x => x.ItemId);
-
-            builder.HasOne(x => x.WinningBid)
+            builder.HasOne(i => i.Item)
                 .WithMany()
-                .HasForeignKey(x => x.WinningBidId)
+                .HasForeignKey(i => i.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(i => i.Bid)
+                .WithMany()
+                .HasForeignKey(i => i.BidId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
