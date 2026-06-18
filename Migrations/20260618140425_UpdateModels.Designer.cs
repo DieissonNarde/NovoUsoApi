@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NovoUsoApi.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NovoUsoApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260618140425_UpdateModels")]
+    partial class UpdateModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,9 +136,6 @@ namespace NovoUsoApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -153,6 +153,9 @@ namespace NovoUsoApi.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Quantity")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -169,9 +172,6 @@ namespace NovoUsoApi.Migrations
                     b.Property<int>("TypeOffer")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -179,31 +179,20 @@ namespace NovoUsoApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Item");
                 });
 
             modelBuilder.Entity("NovoUsoApi.Models.ItemAgreement", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BidId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("ClosedAtUtc")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("OwnerAcceptedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -217,11 +206,12 @@ namespace NovoUsoApi.Migrations
                     b.Property<DateTime?>("WinnerAcceptedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.Property<int>("WinningBidId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("BidId");
+                    b.HasKey("ItemId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("WinningBidId");
 
                     b.ToTable("ItemAgreement");
                 });
@@ -322,48 +312,40 @@ namespace NovoUsoApi.Migrations
 
             modelBuilder.Entity("NovoUsoApi.Models.Item", b =>
                 {
-                    b.HasOne("NovoUsoApi.Models.Address", "Address")
-                        .WithMany("Items")
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("NovoUsoApi.Models.Category", "Category")
                         .WithMany("Items")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("NovoUsoApi.Models.User", "User")
+                    b.HasOne("NovoUsoApi.Models.User", "Owner")
                         .WithMany("Items")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
                     b.Navigation("Category");
 
-                    b.Navigation("User");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("NovoUsoApi.Models.ItemAgreement", b =>
                 {
-                    b.HasOne("NovoUsoApi.Models.Bid", "Bid")
-                        .WithMany()
-                        .HasForeignKey("BidId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("NovoUsoApi.Models.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithOne("Agreement")
+                        .HasForeignKey("NovoUsoApi.Models.ItemAgreement", "ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Bid");
+                    b.HasOne("NovoUsoApi.Models.Bid", "WinningBid")
+                        .WithMany()
+                        .HasForeignKey("WinningBidId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Item");
+
+                    b.Navigation("WinningBid");
                 });
 
             modelBuilder.Entity("NovoUsoApi.Models.ItemPhoto", b =>
@@ -377,11 +359,6 @@ namespace NovoUsoApi.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("NovoUsoApi.Models.Address", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("NovoUsoApi.Models.Category", b =>
                 {
                     b.Navigation("Items");
@@ -389,6 +366,8 @@ namespace NovoUsoApi.Migrations
 
             modelBuilder.Entity("NovoUsoApi.Models.Item", b =>
                 {
+                    b.Navigation("Agreement");
+
                     b.Navigation("Bids");
 
                     b.Navigation("Photos");
