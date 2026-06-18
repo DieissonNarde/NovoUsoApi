@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
 
@@ -9,29 +11,48 @@ namespace NovoUsoApi.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public Task<Category> AddAsync(Category category)
+        private readonly AppDbContext _context;
+
+        public CategoryRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<Category> DeleteAsync(int id)
+        public async Task<Category> AddAsync(Category category)
         {
-            throw new NotImplementedException();
+            _context.Category.Add(category);
+            await _context.SaveChangesAsync();
+            return category;
         }
 
-        public Task<List<Category>> GetAllAsync()
+        public async Task<Category> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await _context.Category.FindAsync(id);
+            
+            if(category == null)
+            {
+                return null;
+            }
+
+            await _context.SaveChangesAsync();
+            return category;
         }
 
-        public Task<Category> GetByIdAsync(int id)
+        public async Task<List<Category>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Category.ToListAsync();
         }
 
-        public Task<Category> UpdateAsync(Category category)
+        public async Task<Category> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Category.FindAsync(id);
+        }
+        
+        public async Task<Category> UpdateAsync(Category category)
+        {
+             _context.Category.Update(category);
+            await _context.SaveChangesAsync();
+            return category;
         }
     }
 }

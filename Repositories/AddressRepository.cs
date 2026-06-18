@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
@@ -39,17 +40,19 @@ namespace NovoUsoApi.Repositories
 
         public async Task<List<Address>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Address.ToListAsync();
         }
 
-        public Task<Address> GetByIdAsync(int id)
+        public async Task<Address> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Address.FindAsync(id);
         }
 
-        public Task<Address> UpdateAsync(Address address)
+        public async Task<Address> UpdateAsync(Address address)
         {
-            throw new NotImplementedException();
+            _context.Address.Update(address);
+            await _context.SaveChangesAsync();
+            return address;
         }
     }
 }

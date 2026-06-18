@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
 
@@ -9,29 +11,48 @@ namespace NovoUsoApi.Repositories
 {
     public class BidRepository : IBidRepository
     {
-        public Task<Bid> AddAsync(Bid bid)
+        private readonly AppDbContext _context;
+
+        public BidRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<Bid> DeleteAsync(int id)
+        public async Task<Bid> AddAsync(Bid bid)
         {
-            throw new NotImplementedException();
+            _context.Bid.Add(bid);
+            await _context.SaveChangesAsync();
+            return bid;
         }
 
-        public Task<List<Bid>> GetAllAsync()
+        public async Task<Bid> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var bid = await _context.Bid.FindAsync(id);
+            
+            if(bid == null)
+            {
+                return null;
+            }
+
+            await _context.SaveChangesAsync();
+            return bid;
         }
 
-        public Task<Bid> GetByIdAsync(int id)
+        public async Task<List<Bid>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Bid.ToListAsync();
         }
 
-        public Task<Bid> UpdateAsync(Bid bid)
+        public async Task<Bid> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Bid.FindAsync(id);
+        }
+
+        public async Task<Bid> UpdateAsync(Bid bid)
+        {
+            _context.Bid.Update(bid);
+            await _context.SaveChangesAsync();
+            return bid;
         }
     }
 }

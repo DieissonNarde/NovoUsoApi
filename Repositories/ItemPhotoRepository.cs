@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
 
@@ -9,29 +11,48 @@ namespace NovoUsoApi.Repositories
 {
     public class ItemPhotoRepository : IItemPhotoRepository
     {
-        public Task<ItemPhoto> AddAsync(ItemPhoto itemPhoto)
+        private readonly AppDbContext _context;
+
+        public ItemPhotoRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<ItemPhoto> DeleteAsync(int id)
+        public async Task<ItemPhoto> AddAsync(ItemPhoto itemPhoto)
         {
-            throw new NotImplementedException();
+            _context.ItemPhoto.Add(itemPhoto);
+            await _context.SaveChangesAsync();
+            return itemPhoto;
         }
 
-        public Task<List<ItemPhoto>> GetAllAsync()
+        public async Task<ItemPhoto> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var itemPhoto = await _context.ItemPhoto.FindAsync(id);
+            
+            if(itemPhoto == null)
+            {
+                return null;
+            }
+
+            await _context.SaveChangesAsync();
+            return itemPhoto;
         }
 
-        public Task<ItemPhoto> GetByIdAsync(int id)
+        public async Task<List<ItemPhoto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ItemPhoto.ToListAsync();
         }
 
-        public Task<ItemPhoto> UpdateAsync(ItemPhoto itemPhoto)
+        public async Task<ItemPhoto> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.ItemPhoto.FindAsync(id);
+        }
+
+        public async Task<ItemPhoto> UpdateAsync(ItemPhoto itemPhoto)
+        {
+            _context.ItemPhoto.Update(itemPhoto);
+            await _context.SaveChangesAsync();
+            return itemPhoto;
         }
     }
 }
