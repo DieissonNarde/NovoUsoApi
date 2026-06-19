@@ -13,13 +13,12 @@ namespace NovoUsoApi.Data
         { 
         }
     
-        public DbSet<Item> Item { get; set; }
-        public DbSet<Address> Address { get; set; }
-        public DbSet<Bid> Bid { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<ItemAgreement> ItemAgreement { get; set; }
-        public DbSet<ItemPhoto> ItemPhoto { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Item> Item { get; set; }
+        public DbSet<ItemPhoto> ItemPhoto { get; set; }
+        public DbSet<Bid> Bid { get; set; }
+        public DbSet<ItemAgreement> ItemAgreement { get; set; }
     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -21,12 +21,12 @@ namespace NovoUsoApi
                     b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
 
-            services.AddScoped<IAddressRepository, AddressRepository>();
-            services.AddScoped<IBidRepository, BidRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IItemPhotoRepository, ItemPhotoRepository>();
-            services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemPhotoRepository, ItemPhotoRepository>();
+            services.AddScoped<IBidRepository, BidRepository>();
+            services.AddScoped<IItemAgreementRepository, ItemAgreementRepository>();
             
             return services;
         }
