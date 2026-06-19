@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace NovoUsoApi.DTOs.User
 {
-    public class UserPostDTO
+    public class UserPutDTO
     {
+        [Required(ErrorMessage = "O Identificador do usuário é obrigatório.")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "O campo de nome é obrigatório.")]
         [MaxLength(200, ErrorMessage = "O nome precisa ter, no máximo, 250 caracteres.")]
         public string Name { get; set; }

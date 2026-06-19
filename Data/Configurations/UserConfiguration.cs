@@ -16,7 +16,7 @@ namespace NovoUsoApi.Data.Configurations
             builder.Property(u => u.Email).IsRequired().HasMaxLength(200);
             builder.Property(u => u.Whatsapp).IsRequired().HasMaxLength(20);
             builder.Property(u => u.CpfCnpj).IsRequired().HasMaxLength(30);
-            builder.Property(u => u.DateBirth).IsRequired().HasMaxLength(50);
+            builder.Property(u => u.DateBirth).IsRequired();
             builder.Property(u => u.PasswordHash).IsRequired();
             builder.Property(u => u.PasswordSalt).IsRequired();
         }
