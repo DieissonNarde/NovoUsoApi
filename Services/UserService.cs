@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using NovoUsoApi.DTOs.User;
 using NovoUsoApi.Interfaces;
@@ -19,13 +21,19 @@ namespace NovoUsoApi.Services
 
         public async Task<UserGetDTO> AddAsync(UserPostDTO userPostDTO)
         {
+            using var hmac = new HMACSHA512();
+            byte[] passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userPostDTO.Password));
+            byte[] passwordSalt = hmac.Key;
+
             var user = new User
             {
                 Name = userPostDTO.Name,
                 Email = userPostDTO.Email,
                 Whatsapp = userPostDTO.Whatsapp,
                 CpfCnpj = userPostDTO.CpfCnpj,
-                DateBirth = userPostDTO.DateBirth
+                DateBirth = userPostDTO.DateBirth,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
             };
 
             var createdUser = await _userRepository.AddAsync(user);

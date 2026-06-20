@@ -27,5 +27,10 @@ namespace NovoUsoApi.DTOs.User
         [Required(ErrorMessage = "O campo de data de nascimento é obrigatório.")]
         [DataType(DataType.Date, ErrorMessage = "A data de nascimento deve ser uma data válida.")]
         public DateOnly DateBirth { get; set; }
+
+        [Required(ErrorMessage = "O campo de senha é obrigatório.")]
+        [MinLength(6, ErrorMessage = "A senha precisa ter, no mínimo, 6 caracteres.")]
+        [MaxLength(100, ErrorMessage = "A senha precisa ter, no máximo, 100 caracteres.")]
+        public string Password { get; set; }
     }
 }
