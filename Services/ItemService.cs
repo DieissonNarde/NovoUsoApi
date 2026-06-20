@@ -88,7 +88,8 @@ namespace NovoUsoApi.Services
         {
             var items = await _itemRepository.GetAllAsync();
             var itemGetDTOs = new List<ItemGetDTO>();
-            foreach (var item in items)            {
+            foreach (var item in items)
+            {
                 itemGetDTOs.Add(new ItemGetDTO
                 {
                     Id = item.Id,
