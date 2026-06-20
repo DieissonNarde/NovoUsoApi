@@ -16,6 +16,9 @@ namespace NovoUsoApi.DTOs.Item
         [MaxLength(200, ErrorMessage = "O título precisa ter, no máximo, 200 caracteres.")]
         public string Title { get; set; }
 
+        [Required(ErrorMessage = "O campo de status é obrigatório.")]
+        public ItemStatus Status { get; set; }
+
         [Required(ErrorMessage = "O campo de descrição é obrigatório.")]
         [MaxLength(400, ErrorMessage = "A descrição precisa ter, no máximo, 400 caracteres.")]
         public string Description { get; set; }
@@ -55,9 +58,6 @@ namespace NovoUsoApi.DTOs.Item
 
         [MaxLength(20, ErrorMessage = "O valor precisa ter, no máximo, 20 caracteres.")]
         public string? Value { get; set; }
-
-        [Required(ErrorMessage = "O identificador de usuário é obrigatório.")]
-        public int UserId { get; set; }
 
         [Required(ErrorMessage = "O campo de ID da categoria é obrigatório.")]
         public int CategoryId { get; set; }

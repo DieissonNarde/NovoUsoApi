@@ -15,7 +15,7 @@ namespace NovoUsoApi.Data.Configurations
             builder.Property(b => b.Date).IsRequired();
             builder.Property(b => b.Value).IsRequired().HasMaxLength(50);
             builder.Property(b => b.Description).IsRequired().HasMaxLength(250);
-            builder.Property(b => b.Status);
+            builder.Property(b => b.Status).IsRequired();
             builder.Property(b => b.ProposalType).IsRequired();
             
             builder.HasOne(b => b.Item).WithMany(b => b.Bids)

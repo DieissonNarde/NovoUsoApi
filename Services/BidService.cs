@@ -6,6 +6,7 @@ using NovoUsoApi.DTOs.Bid;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Interfaces.Services;
 using NovoUsoApi.Models;
+using NovoUsoApi.Models.Enums;
 
 namespace NovoUsoApi.Services
 {
@@ -21,10 +22,10 @@ namespace NovoUsoApi.Services
         {
             var bid = new Bid
             {
-                Date = bidPostDTO.Date,
+                Date = DateTime.UtcNow,
                 Value = bidPostDTO.Value,
                 Description = bidPostDTO.Description,
-                Status = bidPostDTO.Status,
+                Status = BidStatus.Sent,
                 ProposalType = bidPostDTO.ProposalType,
                 ItemId = bidPostDTO.ItemId,
                 UserId = bidPostDTO.UserId
@@ -98,13 +99,11 @@ namespace NovoUsoApi.Services
             var bid = new Bid
             {
                 Id = bidPutDTO.Id,
-                Date = bidPutDTO.Date,
+                Date = DateTime.UtcNow,
                 Value = bidPutDTO.Value,
                 Description = bidPutDTO.Description,
                 Status = bidPutDTO.Status,
-                ProposalType = bidPutDTO.ProposalType,
-                ItemId = bidPutDTO.ItemId,
-                UserId = bidPutDTO.UserId
+                ProposalType = bidPutDTO.ProposalType
             };
             
             var updatedBid = await _bidRepository.UpdateAsync(bid);
@@ -117,9 +116,7 @@ namespace NovoUsoApi.Services
                 Value = updatedBid.Value,
                 Description = updatedBid.Description,
                 Status = updatedBid.Status,
-                ProposalType = updatedBid.ProposalType,
-                ItemId = updatedBid.ItemId,
-                UserId = updatedBid.UserId
+                ProposalType = updatedBid.ProposalType
             };
         }
     }

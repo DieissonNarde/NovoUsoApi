@@ -18,8 +18,5 @@ namespace NovoUsoApi.DTOs.ItemPhoto
 
         [Required(ErrorMessage = "O campo de URL é obrigatório.")]
         public string Url { get; set; }
-
-        [Required(ErrorMessage = "O campo de ID do item é obrigatório.")]
-        public int ItemId { get; set; }
     }
 }

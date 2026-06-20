@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NovoUsoApi.DTOs.Category;
 using NovoUsoApi.DTOs.Item;
+using NovoUsoApi.DTOs.User;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
+using NovoUsoApi.Models.Enums;
 using NovoUsoApi.Services.Interfaces;
 
 namespace NovoUsoApi.Services
@@ -22,6 +25,7 @@ namespace NovoUsoApi.Services
             var item = new Item
             {
                 Title = itemPostDTO.Title,
+                Status = ItemStatus.Published,
                 Description = itemPostDTO.Description,
                 Quantity = itemPostDTO.Quantity,
                 ZipCode = itemPostDTO.ZipCode,
@@ -41,6 +45,7 @@ namespace NovoUsoApi.Services
             return new ItemGetDTO
             {
                 Id = createdItem.Id,
+                Status = createdItem.Status,
                 Title = createdItem.Title,
                 Description = createdItem.Description,
                 Quantity = createdItem.Quantity,
@@ -66,6 +71,7 @@ namespace NovoUsoApi.Services
             return new ItemGetDTO
             {
                 Id = deletedItem.Id,
+                Status = deletedItem.Status,
                 Title = deletedItem.Title,
                 Description = deletedItem.Description,
                 Quantity = deletedItem.Quantity,
@@ -84,15 +90,16 @@ namespace NovoUsoApi.Services
 
         }
 
-        public async Task<List<ItemGetDTO>> GetAllAsync()
+        public async Task<List<ItemGetDetailDTO>> GetAllAsync()
         {
             var items = await _itemRepository.GetAllAsync();
-            var itemGetDTOs = new List<ItemGetDTO>();
+            var itemGetDTOs = new List<ItemGetDetailDTO>();
             foreach (var item in items)
             {
-                itemGetDTOs.Add(new ItemGetDTO
+                itemGetDTOs.Add(new ItemGetDetailDTO
                 {
                     Id = item.Id,
+                    Status = item.Status,
                     Title = item.Title,
                     Description = item.Description,
                     Quantity = item.Quantity,
@@ -105,21 +112,30 @@ namespace NovoUsoApi.Services
                     DurationDays = item.DurationDays,
                     TypeOffer = item.TypeOffer,
                     Value = item.Value,
-                    UserId = item.UserId,
-                    CategoryId = item.CategoryId
+                    User = new UserGetDTO
+                    {
+                        Id = item.User.Id,
+                        Name = item.User.Name
+                    },
+                    Category = new CategoryGetDTO
+                    {
+                        Id = item.Category.Id,
+                        Name = item.Category.Name
+                    }
                 });
             }
             return itemGetDTOs;
         }
 
-        public async Task<ItemGetDTO> GetByIdAsync(int id)
+        public async Task<ItemGetDetailDTO> GetByIdAsync(int id)
         {
             var item = await _itemRepository.GetByIdAsync(id);
             if (item == null)
                 return null;
-            return new ItemGetDTO
+            return new ItemGetDetailDTO
             {
                 Id = item.Id,
+                Status = item.Status,
                 Title = item.Title,
                 Description = item.Description,
                 Quantity = item.Quantity,
@@ -132,8 +148,16 @@ namespace NovoUsoApi.Services
                 DurationDays = item.DurationDays,
                 TypeOffer = item.TypeOffer,
                 Value = item.Value,
-                UserId = item.UserId,
-                CategoryId = item.CategoryId
+                User = new UserGetDTO
+                {
+                    Id = item.User.Id,
+                    Name = item.User.Name
+                },
+                Category = new CategoryGetDTO
+                {
+                    Id = item.Category.Id,
+                    Name = item.Category.Name
+                }
             };
         }
 
@@ -142,6 +166,7 @@ namespace NovoUsoApi.Services
             var item = new Item
             {
                 Id = itemPutDTO.Id,
+                Status = itemPutDTO.Status,
                 Title = itemPutDTO.Title,
                 Description = itemPutDTO.Description,
                 Quantity = itemPutDTO.Quantity,
@@ -154,7 +179,6 @@ namespace NovoUsoApi.Services
                 DurationDays = itemPutDTO.DurationDays,
                 TypeOffer = itemPutDTO.TypeOffer,
                 Value = itemPutDTO.Value,
-                UserId = itemPutDTO.UserId,
                 CategoryId = itemPutDTO.CategoryId
             };
 
@@ -163,6 +187,7 @@ namespace NovoUsoApi.Services
                 return null;
             return new ItemGetDTO
             {   Id = updatedItem.Id,
+                Status = updatedItem.Status,
                 Title = updatedItem.Title,
                 Description = updatedItem.Description,
                 Quantity = updatedItem.Quantity,
@@ -175,7 +200,6 @@ namespace NovoUsoApi.Services
                 DurationDays = updatedItem.DurationDays,
                 TypeOffer = updatedItem.TypeOffer,
                 Value = updatedItem.Value,
-                UserId = updatedItem.UserId,
                 CategoryId = updatedItem.CategoryId
             };
         }

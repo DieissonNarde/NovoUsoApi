@@ -84,8 +84,7 @@ namespace NovoUsoApi.Services
                 Id = itemPhotoPutDTO.Id,
                 FileName = itemPhotoPutDTO.FileName,
                 ContentType = itemPhotoPutDTO.ContentType,
-                Url = itemPhotoPutDTO.Url,
-                ItemId = itemPhotoPutDTO.ItemId
+                Url = itemPhotoPutDTO.Url
             };
 
             var updatedItemPhoto = await _itemPhotoRepository.UpdateAsync(itemPhoto);
@@ -98,8 +97,7 @@ namespace NovoUsoApi.Services
                 Id = updatedItemPhoto.Id,
                 FileName = updatedItemPhoto.FileName,
                 ContentType = updatedItemPhoto.ContentType,
-                Url = updatedItemPhoto.Url,
-                ItemId = updatedItemPhoto.ItemId
+                Url = updatedItemPhoto.Url
             };
         }
     }

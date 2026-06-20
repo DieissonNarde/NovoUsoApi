@@ -12,7 +12,7 @@ namespace NovoUsoApi.Data.Configurations
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Item> builder)
         {
             builder.HasKey(i => i.Id);
-            builder.Property(i => i.Status);
+            builder.Property(i => i.Status).IsRequired();
             builder.Property(i => i.Title).IsRequired().HasMaxLength(200);
             builder.Property(i => i.Description).IsRequired().HasMaxLength(400);
             builder.Property(i => i.Quantity).IsRequired().HasMaxLength(50);
