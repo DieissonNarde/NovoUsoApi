@@ -8,8 +8,8 @@ namespace NovoUsoApi.Services.Interfaces
 {
     public interface IItemService
     {
-        Task<ItemGetDTO> GetByIdAsync(int id);
-        Task<List<ItemGetDTO>> GetAllAsync();
+        Task<ItemGetDetailDTO> GetByIdAsync(int id);
+        Task<List<ItemGetDetailDTO>> GetAllAsync();
         Task<ItemGetDTO> AddAsync(ItemPostDTO itemPostDTO);
         Task<ItemGetDTO> UpdateAsync(ItemPutDTO itemPutDTO);
         Task<ItemGetDTO> DeleteAsync(int id);

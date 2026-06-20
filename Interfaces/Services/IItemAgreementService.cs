@@ -9,7 +9,9 @@ namespace NovoUsoApi.Interfaces.Services
 {
     public interface IItemAgreementService
     {
-        Task<ItemAgreementGetDTO> GetByIdAsync(int id);
+        Task<ItemAgreementGetDetailDTO> GetByIdAsync(int id);
         Task<List<ItemAgreementGetDTO>> GetAllAsync();
+        Task<ItemAgreementGetDTO> AddAsync(ItemAgreementPostDTO itemAgreementPostDTO);
+        Task<ItemAgreementGetDTO> UpdateAsync(ItemAgreementPutDTO itemAgreementPutDTO);
     }
 }
