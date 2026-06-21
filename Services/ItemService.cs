@@ -6,6 +6,7 @@ using NovoUsoApi.DTOs.Category;
 using NovoUsoApi.DTOs.Item;
 using NovoUsoApi.DTOs.User;
 using NovoUsoApi.Interfaces;
+using NovoUsoApi.Middleawre.Errors;
 using NovoUsoApi.Models;
 using NovoUsoApi.Models.Enums;
 using NovoUsoApi.Services.Interfaces;
@@ -15,13 +16,24 @@ namespace NovoUsoApi.Services
     public class ItemService : IItemService
     {
         private readonly IItemRepository _itemRepository;
-        public ItemService(IItemRepository itemRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly ICategoryRepository _categoryRepository;
+
+        public ItemService(IItemRepository itemRepository, IUserRepository userRepository, ICategoryRepository categoryRepository)
         {
             _itemRepository = itemRepository;
+            _userRepository = userRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<ItemGetDTO> AddAsync(ItemPostDTO itemPostDTO)
         {
+            if (await _userRepository.GetByIdAsync(itemPostDTO.UserId) == null)
+                throw new NotFoundException("Usuário não encrontado.");
+
+            if (await _categoryRepository.GetByIdAsync(itemPostDTO.CategoryId) == null)
+                throw new NotFoundException("Categoria não encrontada.");
+
             var item = new Item
             {
                 Title = itemPostDTO.Title,
@@ -69,7 +81,7 @@ namespace NovoUsoApi.Services
         {
             var deletedItem = await _itemRepository.DeleteAsync(id);
             if (deletedItem == null)
-                return null;
+                throw new NotFoundException("Item não encontrado.");
             return new ItemGetDTO
             {
                 Id = deletedItem.Id,
@@ -135,7 +147,7 @@ namespace NovoUsoApi.Services
         {
             var item = await _itemRepository.GetByIdAsync(id);
             if (item == null)
-                return null;
+                throw new NotFoundException("Item não encontrado.");
             return new ItemGetDetailDTO
             {
                 Id = item.Id,
@@ -168,6 +180,12 @@ namespace NovoUsoApi.Services
 
         public async Task<ItemGetDTO> UpdateAsync(ItemPutDTO itemPutDTO)
         {
+            if (await _itemRepository.GetByIdAsync(itemPutDTO.Id) == null)
+                throw new NotFoundException("Item não encontrado.");
+
+            if (await _categoryRepository.GetByIdAsync(itemPutDTO.CategoryId) == null)
+                throw new NotFoundException("Categoria não encrontada.");
+
             var item = new Item
             {
                 Id = itemPutDTO.Id,
@@ -184,7 +202,7 @@ namespace NovoUsoApi.Services
                 DurationDays = itemPutDTO.DurationDays,
                 TypeOffer = itemPutDTO.TypeOffer,
                 Value = itemPutDTO.Value,
-                CategoryId = itemPutDTO.CategoryId
+                CategoryId = itemPutDTO.CategoryId,
             };
 
             var updatedItem = await _itemRepository.UpdateAsync(item);

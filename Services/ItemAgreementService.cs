@@ -7,6 +7,7 @@ using NovoUsoApi.DTOs.Item;
 using NovoUsoApi.DTOs.ItemAgreement;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Interfaces.Services;
+using NovoUsoApi.Middleawre.Errors;
 using NovoUsoApi.Models;
 using NovoUsoApi.Models.Enums;
 
@@ -15,13 +16,24 @@ namespace NovoUsoApi.Services
     public class ItemAgreementService : IItemAgreementService
     {
         private readonly IItemAgreementRepository _itemAgreementRepository;
-        public ItemAgreementService(IItemAgreementRepository itemAgreementRepository)
+        private readonly IItemRepository _itemRepository;
+        private readonly IBidRepository _bidRepository;
+
+        public ItemAgreementService(IItemAgreementRepository itemAgreementRepository, IItemRepository itemRepository, IBidRepository bidRepository)
         {
             _itemAgreementRepository = itemAgreementRepository;
+            _itemRepository = itemRepository;
+            _bidRepository = bidRepository;
         }
 
         public async Task<ItemAgreementGetDTO> AddAsync(ItemAgreementPostDTO itemAgreementPostDTO)
         {
+            if (await _itemRepository.GetByIdAsync(itemAgreementPostDTO.ItemId) == null)
+                throw new NotFoundException("Item não encrontado.");
+
+            if (await _bidRepository.GetByIdAsync(itemAgreementPostDTO.BidId) == null)
+                throw new NotFoundException("Lance não encrontado.");
+            
             var itemAgreement = new ItemAgreement
             {
                 Status = AgreementStatus.PendingBoth,
@@ -70,7 +82,7 @@ namespace NovoUsoApi.Services
             var itemAgreement = await _itemAgreementRepository.GetByIdAsync(id);
             if (itemAgreement == null)
             {
-                return null;
+                throw new NotFoundException("Contrato de Item não encontrado.");
             }
 
             return new ItemAgreementGetDetailDTO
@@ -109,6 +121,9 @@ namespace NovoUsoApi.Services
 
         public async Task<ItemAgreementGetDTO> UpdateAsync(ItemAgreementPutDTO itemAgreementPutDTO)
         {
+            if (await _itemAgreementRepository.GetByIdAsync(itemAgreementPutDTO.Id) == null)
+                throw new NotFoundException("Contrato de Item não encontrado.");
+
             var itemAgreement = new ItemAgreement
             {
                 Id = itemAgreementPutDTO.Id,

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NovoUsoApi.DTOs.Category;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Interfaces.Services;
+using NovoUsoApi.Middleawre.Errors;
 
 namespace NovoUsoApi.Services
 {
@@ -31,7 +32,7 @@ namespace NovoUsoApi.Services
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
-                return null;
+                throw new NotFoundException("Categoria não encontrada.");
             }
 
             return new CategoryGetDTO

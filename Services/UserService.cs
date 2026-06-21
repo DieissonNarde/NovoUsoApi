@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NovoUsoApi.DTOs.User;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Interfaces.Services;
+using NovoUsoApi.Middleawre.Errors;
 using NovoUsoApi.Models;
 
 namespace NovoUsoApi.Services
@@ -51,6 +52,9 @@ namespace NovoUsoApi.Services
         public async Task<UserGetDTO> DeleteAsync(int id)
         {
             var deletedUser = await _userRepository.DeleteAsync(id);
+            if (deletedUser == null)
+                throw new NotFoundException("Usuário não encontrado.");
+
             return new UserGetDTO
             {
                 Id = deletedUser.Id,
@@ -80,7 +84,8 @@ namespace NovoUsoApi.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
-                return null;
+                throw new NotFoundException("Usuário não encontrado.");
+
             return new UserGetDTO
             {
                 Id = user.Id,
@@ -94,6 +99,9 @@ namespace NovoUsoApi.Services
 
         public async Task<UserGetDTO> UpdateAsync(UserPutDTO userPutDTO)
         {
+            if (await _userRepository.GetByIdAsync(userPutDTO.Id) == null)
+                throw new NotFoundException("Usuário não encontrado.");
+
             var user = new User
             {
                 Id = userPutDTO.Id,

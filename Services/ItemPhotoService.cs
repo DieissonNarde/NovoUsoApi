@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NovoUsoApi.DTOs.ItemPhoto;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Interfaces.Services;
+using NovoUsoApi.Middleawre.Errors;
 using NovoUsoApi.Models;
 
 namespace NovoUsoApi.Services
@@ -12,13 +13,19 @@ namespace NovoUsoApi.Services
     public class ItemPhotoService : IItemPhotoService
     {
         private readonly IItemPhotoRepository _itemPhotoRepository;
-        public ItemPhotoService(IItemPhotoRepository itemPhotoRepository)
+        private readonly IItemRepository _itemRepository;
+
+        public ItemPhotoService(IItemPhotoRepository itemPhotoRepository, IItemRepository itemRepository)
         {
             _itemPhotoRepository = itemPhotoRepository;
+            _itemRepository = itemRepository;
         }
 
         public async Task<ItemPhotoGetDTO> AddAsync(ItemPhotoPostDTO itemPhotoPostDTO)
         {
+            if (await _itemRepository.GetByIdAsync(itemPhotoPostDTO.ItemId) == null)
+                throw new NotFoundException("Item não encontrado.");
+
             var itemPhoto = new ItemPhoto
             {
                 FileName = itemPhotoPostDTO.FileName,
@@ -41,6 +48,9 @@ namespace NovoUsoApi.Services
         public async Task<ItemPhotoGetDTO> DeleteAsync(int id)
         {
             var deletedItemPhoto = await _itemPhotoRepository.DeleteAsync(id);
+            if (deletedItemPhoto == null)
+                throw new NotFoundException("Foto do Item não encontrado.");
+
             return new ItemPhotoGetDTO
             {
                 Id = deletedItemPhoto.Id,
@@ -67,6 +77,9 @@ namespace NovoUsoApi.Services
         public async Task<ItemPhotoGetDTO> GetByIdAsync(int id)
         {
             var itemPhoto = await _itemPhotoRepository.GetByIdAsync(id);
+            if (itemPhoto == null)
+                throw new NotFoundException("Foto do Item não encontrado.");
+
             return new ItemPhotoGetDTO
             {
                 Id = itemPhoto.Id,
@@ -79,6 +92,9 @@ namespace NovoUsoApi.Services
 
         public async Task<ItemPhotoGetDTO> UpdateAsync(ItemPhotoPutDTO itemPhotoPutDTO)
         {
+            if (await _itemRepository.GetByIdAsync(itemPhotoPutDTO.Id) == null)
+                throw new NotFoundException("Foto do Item não encontrado.");
+
             var itemPhoto = new ItemPhoto
             {
                 Id = itemPhotoPutDTO.Id,
