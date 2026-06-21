@@ -1,4 +1,7 @@
+using System.Runtime.CompilerServices;
+using Microsoft.OpenApi;
 using NovoUsoApi;
+using NovoUsoApi.Middleawre;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,22 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+       [new OpenApiSecuritySchemeReference("bearer", document)] = [] 
+    });
+});
 
 var app = builder.Build();
 
@@ -20,7 +38,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleawre>();
+
 app.UseHttpsRedirection();
 
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
