@@ -40,7 +40,7 @@ namespace NovoUsoApi.Repositories
 
         public async Task<List<Item>> GetAllAsync()
         {
-            return await _context.Item.ToListAsync();
+            return await _context.Item.Where(x => x.Status == Models.Enums.ItemStatus.Published).ToListAsync();
         }
 
         public async Task<Item> GetByIdAsync(int id)
