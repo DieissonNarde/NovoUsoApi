@@ -6,7 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces;
+using NovoUsoApi.Interfaces.Services;
 using NovoUsoApi.Repositories;
+using NovoUsoApi.Services;
+using NovoUsoApi.Services.Interfaces;
 
 namespace NovoUsoApi
 {
@@ -27,6 +30,13 @@ namespace NovoUsoApi
             services.AddScoped<IItemPhotoRepository, ItemPhotoRepository>();
             services.AddScoped<IBidRepository, BidRepository>();
             services.AddScoped<IItemAgreementRepository, ItemAgreementRepository>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IItemPhotoService, ItemPhotoService>();
+            services.AddScoped<IBidService, BidService>();
+            services.AddScoped<IItemAgreementService, ItemAgreementService>();
             
             return services;
         }
