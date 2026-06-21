@@ -21,11 +21,6 @@ namespace NovoUsoApi.Controllers
         public async Task<ActionResult> GetCategoryById(int id)
         {
             var category = await _categoryService.GetByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound("Categoria não encontrado.");
-            }
-
             return Ok(category);
         }
 

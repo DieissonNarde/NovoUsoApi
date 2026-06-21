@@ -22,11 +22,6 @@ namespace NovoUsoApi.Controllers
         public async Task<IActionResult> CreateBid(BidPostDTO bidPostDTO)
         {
             var createdBid = await _bidService.AddAsync(bidPostDTO);
-            if (createdBid == null)
-            {
-                return BadRequest("Não foi possível criar o lance.");
-            }
-
             return Ok(new { message = "Lance cadastrado com sucesso."});
         }
 
@@ -34,11 +29,6 @@ namespace NovoUsoApi.Controllers
         public async Task<IActionResult> UpdateBid(BidPutDTO bidPutDTO)
         {
             var updatedBid = await _bidService.UpdateAsync(bidPutDTO);
-            if (updatedBid == null)
-            {
-                return BadRequest("Não foi possível atualizar o lance.");
-            }
-
             return Ok(new { message = "Lance atualizado com sucesso."});
         }
 
@@ -46,11 +36,6 @@ namespace NovoUsoApi.Controllers
         public async Task<ActionResult> DeleteBid(int id)
         {
             var deletedBid = await _bidService.DeleteAsync(id);
-            if (deletedBid == null)
-            {
-                return BadRequest("Ocorreu um erro ao deletar o lance.");
-            }
-
             return Ok(new { message = "Lance deletado com sucesso!"});
         }
 
@@ -58,11 +43,6 @@ namespace NovoUsoApi.Controllers
         public async Task<ActionResult> GetBidById(int id)
         {
             var bid = await _bidService.GetByIdAsync(id);
-            if (bid == null)
-            {
-                return NotFound("Lance não encontrado.");
-            }
-
             return Ok(bid);
         }
 

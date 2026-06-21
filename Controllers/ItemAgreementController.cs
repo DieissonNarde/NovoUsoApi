@@ -23,11 +23,6 @@ namespace NovoUsoApi.Controllers
         public async Task<IActionResult> AddItemAgreement(ItemAgreementPostDTO itemAgreementPostDTO)
         {
             var createdItemAgreement = await _itemAgreementService.AddAsync(itemAgreementPostDTO);
-            if (createdItemAgreement == null)
-            {
-                return BadRequest("Não foi possível adicionar o contrato de item.");
-            }
-
             return Ok(new { message = "Contrato de item adicionado com sucesso."});
         }
 
@@ -35,11 +30,6 @@ namespace NovoUsoApi.Controllers
         public async Task<IActionResult> UpdateItemAgreement(ItemAgreementPutDTO itemAgreementPutDTO)
         {
             var updatedItemAgreement = await _itemAgreementService.UpdateAsync(itemAgreementPutDTO);
-            if (updatedItemAgreement == null)
-            {
-                return BadRequest("Não foi possível atualizar o contrato de item.");
-            }
-
             return Ok(new { message = "Contrato de item atualizado com sucesso."});
         }
 
@@ -47,11 +37,6 @@ namespace NovoUsoApi.Controllers
         public async Task<ActionResult> GetItemAgreementById(int id)
         {
             var itemAgreement = await _itemAgreementService.GetByIdAsync(id);
-            if (itemAgreement == null)
-            {
-                return NotFound("Contrato de item não encontrado.");
-            }
-
             return Ok(itemAgreement);
         }
 

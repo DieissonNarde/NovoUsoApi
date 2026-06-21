@@ -22,11 +22,6 @@ namespace NovoUsoApi.Controllers
         public async Task<IActionResult> AddItem(ItemPostDTO itemPostDTO)
         {
             var createdItem = await _itemService.AddAsync(itemPostDTO);
-            if (createdItem == null)
-            {
-                return BadRequest("Não foi possível adicionar o item.");
-            }
-
             return Ok(new { message = "Item adicionado com sucesso."});
         }
 
@@ -34,11 +29,6 @@ namespace NovoUsoApi.Controllers
         public async Task<IActionResult> UpdateItem(ItemPutDTO itemPutDTO)
         {
             var updatedItem = await _itemService.UpdateAsync(itemPutDTO);
-            if (updatedItem == null)
-            {
-                return BadRequest("Não foi possível atualizar o item.");
-            }
-
             return Ok(new { message = "Item atualizado com sucesso."});
         }
 
@@ -46,11 +36,6 @@ namespace NovoUsoApi.Controllers
         public async Task<ActionResult> DeleteItem(int id)
         {
             var deletedItem = await _itemService.DeleteAsync(id);
-            if (deletedItem == null)
-            {
-                return BadRequest("Ocorreu um erro ao deletar o item.");
-            }
-
             return Ok(new { message = "Item deletado com sucesso!"});
         }
 
@@ -58,11 +43,6 @@ namespace NovoUsoApi.Controllers
         public async Task<ActionResult> GetItemById(int id)
         {
             var item = await _itemService.GetByIdAsync(id);
-            if (item == null)
-            {
-                return NotFound("Item não encontrado.");
-            }
-
             return Ok(item);
         }
 
