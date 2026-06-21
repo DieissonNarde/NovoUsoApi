@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NovoUsoApi.DTOs.Bid;
 using NovoUsoApi.DTOs.Category;
-using NovoUsoApi.DTOs.ItemPhoto;
 using NovoUsoApi.DTOs.User;
 using NovoUsoApi.Models.Enums;
 
@@ -14,6 +12,7 @@ namespace NovoUsoApi.DTOs.Item
     {
         public int Id { get; set; }
         public ItemStatus Status { get; set; }
+        public DateTime CreatedAtUtc { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Quantity { get; set; }

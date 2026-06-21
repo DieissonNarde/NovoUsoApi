@@ -26,6 +26,7 @@ namespace NovoUsoApi.Services
             {
                 Title = itemPostDTO.Title,
                 Status = ItemStatus.Published,
+                CreatedAtUtc = DateTime.UtcNow,
                 Description = itemPostDTO.Description,
                 Quantity = itemPostDTO.Quantity,
                 ZipCode = itemPostDTO.ZipCode,
@@ -46,6 +47,7 @@ namespace NovoUsoApi.Services
             {
                 Id = createdItem.Id,
                 Status = createdItem.Status,
+                CreatedAtUtc = createdItem.CreatedAtUtc,
                 Title = createdItem.Title,
                 Description = createdItem.Description,
                 Quantity = createdItem.Quantity,
@@ -72,6 +74,7 @@ namespace NovoUsoApi.Services
             {
                 Id = deletedItem.Id,
                 Status = deletedItem.Status,
+                CreatedAtUtc = deletedItem.CreatedAtUtc,
                 Title = deletedItem.Title,
                 Description = deletedItem.Description,
                 Quantity = deletedItem.Quantity,
@@ -100,6 +103,7 @@ namespace NovoUsoApi.Services
                 {
                     Id = item.Id,
                     Status = item.Status,
+                    CreatedAtUtc = item.CreatedAtUtc,
                     Title = item.Title,
                     Description = item.Description,
                     Quantity = item.Quantity,
@@ -136,6 +140,7 @@ namespace NovoUsoApi.Services
             {
                 Id = item.Id,
                 Status = item.Status,
+                CreatedAtUtc = item.CreatedAtUtc,
                 Title = item.Title,
                 Description = item.Description,
                 Quantity = item.Quantity,

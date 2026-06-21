@@ -13,6 +13,7 @@ namespace NovoUsoApi.Data.Configurations
         {
             builder.HasKey(i => i.Id);
             builder.Property(i => i.Status).IsRequired();
+            builder.Property(i => i.CreatedAtUtc).IsRequired();
             builder.Property(i => i.Title).IsRequired().HasMaxLength(200);
             builder.Property(i => i.Description).IsRequired().HasMaxLength(400);
             builder.Property(i => i.Quantity).IsRequired().HasMaxLength(50);

@@ -11,6 +11,7 @@ namespace NovoUsoApi.DTOs.Item
     {
         public int Id { get; set; }
         public ItemStatus Status { get; set; }
+        public DateTime CreatedAtUtc { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Quantity { get; set; }
