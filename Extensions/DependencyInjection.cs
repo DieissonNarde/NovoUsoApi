@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NovoUsoApi.Data;
-using NovoUsoApi.Data.Identity;
+using NovoUsoApi.Services.Identity;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Interfaces.Account;
 using NovoUsoApi.Interfaces.Services;
