@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NovoUsoApi.Data;
 using NovoUsoApi.Interfaces.Account;
 using NovoUsoApi.Models;
 
-namespace NovoUsoApi.Data.Identity
+namespace NovoUsoApi.Services.Identity
 {
     public class AuthenticateService : IAuthenticate
     {
@@ -70,7 +71,7 @@ namespace NovoUsoApi.Data.Identity
 
         public Task<bool> UserExists(string email)
         {
-            throw new NotImplementedException();
+            return _context.User.AnyAsync(u => u.Email.ToLower() == email.ToLower());
         }
     }
 }

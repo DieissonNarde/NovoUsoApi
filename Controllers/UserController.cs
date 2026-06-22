@@ -24,6 +24,10 @@ namespace NovoUsoApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser(UserPostDTO userPostDTO)
         {
+            var userExists = await _authenticate.UserExists(userPostDTO.Email);
+            if (userExists)
+                return BadRequest(new { message = "Email já cadastrado." });
+                
             var user = await _userService.AddAsync(userPostDTO);
             var token = _authenticate.GenerateToken(user.Id, user.Email.ToLower());
             return Ok(new { Name = user.Name, Token = token });
