@@ -11,5 +11,6 @@ namespace NovoUsoApi.Interfaces.Account
         public string GenerateToken(int id, string email);
         Task<User> GetUserByEmail(string email);
         Task<bool> UserExists(string email);
+        Task<bool> AuthenticateAsync(string email, string password);
     }
 }

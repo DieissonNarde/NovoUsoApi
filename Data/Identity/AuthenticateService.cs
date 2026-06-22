@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NovoUsoApi.Interfaces.Account;
 using NovoUsoApi.Models;
@@ -19,6 +21,23 @@ namespace NovoUsoApi.Data.Identity
         {
             _context = context;
             _configuration = configuration;
+        }
+
+        public async Task<bool> AuthenticateAsync(string email, string password)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            if (user == null)
+                return false;
+            
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i])
+                    return false;
+            }
+            return true;
+            
         }
 
         public string GenerateToken(int id, string email)
@@ -44,9 +63,9 @@ namespace NovoUsoApi.Data.Identity
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            throw new NotImplementedException();
+            return await _context.User.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
         public Task<bool> UserExists(string email)
