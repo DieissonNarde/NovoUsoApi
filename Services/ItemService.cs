@@ -9,6 +9,7 @@ using NovoUsoApi.Interfaces;
 using NovoUsoApi.Middleawre.Errors;
 using NovoUsoApi.Models;
 using NovoUsoApi.Models.Enums;
+using NovoUsoApi.Pagination;
 using NovoUsoApi.Services.Interfaces;
 
 namespace NovoUsoApi.Services
@@ -105,9 +106,9 @@ namespace NovoUsoApi.Services
 
         }
 
-        public async Task<List<ItemGetDetailDTO>> GetAllAsync()
+        public async Task<PagedList<ItemGetDetailDTO>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var items = await _itemRepository.GetAllAsync();
+            var items = await _itemRepository.GetAllAsync(pageNumber, pageSize);
             var itemGetDTOs = new List<ItemGetDetailDTO>();
             foreach (var item in items)
             {
@@ -140,7 +141,7 @@ namespace NovoUsoApi.Services
                     }
                 });
             }
-            return itemGetDTOs;
+            return new PagedList<ItemGetDetailDTO>(itemGetDTOs, items.CurrentPage, items.PageSize, items.TotalCount);
         }
 
         public async Task<ItemGetDetailDTO> GetByIdAsync(int id)

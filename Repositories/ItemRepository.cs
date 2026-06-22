@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NovoUsoApi.Data;
+using NovoUsoApi.Helpers;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Models;
+using NovoUsoApi.Pagination;
 
 namespace NovoUsoApi.Repositories
 {
@@ -38,9 +40,10 @@ namespace NovoUsoApi.Repositories
             return item;
         }
 
-        public async Task<List<Item>> GetAllAsync()
+        public async Task<PagedList<Item>> GetAllAsync(int pageNumber, int pageSize)
         {
-            return await _context.Item.Where(x => x.Status == Models.Enums.ItemStatus.Published).ToListAsync();
+            var query = _context.Item.Where(x => x.Status == Models.Enums.ItemStatus.Published).AsNoTracking();
+            return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
         }
 
         public async Task<Item> GetByIdAsync(int id)

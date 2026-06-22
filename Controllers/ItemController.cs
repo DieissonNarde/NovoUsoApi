@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NovoUsoApi.DTOs.Item;
+using NovoUsoApi.Extensions;
+using NovoUsoApi.Pagination;
 using NovoUsoApi.Services.Interfaces;
 
 namespace NovoUsoApi.Controllers
@@ -47,9 +49,12 @@ namespace NovoUsoApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllItems()
+        public async Task<ActionResult> GetAllItems(PaginationParams paginationParams)
         {
-            var items = await _itemService.GetAllAsync();
+            var items = await _itemService.GetAllAsync(paginationParams.PageNumber, paginationParams.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(paginationParams.PageNumber, paginationParams.PageSize, items.TotalCount, items.TotalPages));
+            
             return Ok(items);
         }
     }
