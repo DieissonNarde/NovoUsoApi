@@ -6,6 +6,17 @@ using NovoUsoApi.Middleawre;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://127.0.0.1:5500") // Origem específica
+                .AllowCredentials()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -41,6 +52,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleawre>();
 
 app.UseHttpsRedirection();
+
+app.UseCors("PermitirFrontend");
 
 app.UseAuthorization();
 
