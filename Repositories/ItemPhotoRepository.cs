@@ -18,9 +18,9 @@ namespace NovoUsoApi.Repositories
             _context = context;
         }
 
-        public async Task<ItemPhoto> AddAsync(ItemPhoto itemPhoto)
+        public async Task<List<ItemPhoto>> AddAsync(List<ItemPhoto> itemPhoto)
         {
-            _context.ItemPhoto.Add(itemPhoto);
+            _context.ItemPhoto.AddRange(itemPhoto);
             await _context.SaveChangesAsync();
             return itemPhoto;
         }
@@ -34,6 +34,7 @@ namespace NovoUsoApi.Repositories
                 return null;
             }
 
+            _context.ItemPhoto.Remove(itemPhoto);
             await _context.SaveChangesAsync();
             return itemPhoto;
         }

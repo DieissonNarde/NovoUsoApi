@@ -12,9 +12,8 @@ namespace NovoUsoApi.Data.Configurations
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ItemPhoto> builder)
         {
             builder.HasKey(i => i.Id);
-            builder.Property(i => i.FileName);
-            builder.Property(i => i.ContentType);
-            builder.Property(i => i.Url);
+            builder.Property(i => i.Url).IsRequired();
+            builder.Property(i => i.Order);
 
             builder.HasOne(i => i.Item).WithMany(i => i.Photos)
                                         .HasForeignKey(i => i.ItemId)

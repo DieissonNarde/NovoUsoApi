@@ -10,7 +10,7 @@ namespace NovoUsoApi.Interfaces
     {
         Task<ItemPhoto> GetByIdAsync(int id);
         Task<List<ItemPhoto>> GetAllAsync();
-        Task<ItemPhoto> AddAsync(ItemPhoto itemPhoto);
+        Task<List<ItemPhoto>> AddAsync(List<ItemPhoto> itemPhoto);
         Task<ItemPhoto> UpdateAsync(ItemPhoto itemPhoto);
         Task<ItemPhoto> DeleteAsync(int id);
     }

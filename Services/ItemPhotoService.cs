@@ -28,19 +28,17 @@ namespace NovoUsoApi.Services
 
             var itemPhoto = new ItemPhoto
             {
-                FileName = itemPhotoPostDTO.FileName,
-                ContentType = itemPhotoPostDTO.ContentType,
                 Url = itemPhotoPostDTO.Url,
                 ItemId = itemPhotoPostDTO.ItemId
             };
 
-            var createdItemPhoto = await _itemPhotoRepository.AddAsync(itemPhoto);
+            var createdItemPhotos = await _itemPhotoRepository.AddAsync(new List<ItemPhoto> { itemPhoto });
+            var createdItemPhoto = createdItemPhotos.First();
             return new ItemPhotoGetDTO
             {
                 Id = createdItemPhoto.Id,
-                FileName = createdItemPhoto.FileName,
-                ContentType = createdItemPhoto.ContentType,
                 Url = createdItemPhoto.Url,
+                Order = createdItemPhoto.Order,
                 ItemId = createdItemPhoto.ItemId
             };
         }
@@ -54,9 +52,8 @@ namespace NovoUsoApi.Services
             return new ItemPhotoGetDTO
             {
                 Id = deletedItemPhoto.Id,
-                FileName = deletedItemPhoto.FileName,
-                ContentType = deletedItemPhoto.ContentType,
                 Url = deletedItemPhoto.Url,
+                Order = deletedItemPhoto.Order,
                 ItemId = deletedItemPhoto.ItemId
             };
         }
@@ -67,9 +64,8 @@ namespace NovoUsoApi.Services
             return itemPhotos.Select(itemPhoto => new ItemPhotoGetDTO
             {
                 Id = itemPhoto.Id,
-                FileName = itemPhoto.FileName,
-                ContentType = itemPhoto.ContentType,
                 Url = itemPhoto.Url,
+                Order = itemPhoto.Order,
                 ItemId = itemPhoto.ItemId
             }).ToList();
         }
@@ -83,24 +79,24 @@ namespace NovoUsoApi.Services
             return new ItemPhotoGetDTO
             {
                 Id = itemPhoto.Id,
-                FileName = itemPhoto.FileName,
-                ContentType = itemPhoto.ContentType,
                 Url = itemPhoto.Url,
+                Order = itemPhoto.Order,
                 ItemId = itemPhoto.ItemId
             };
         }
 
         public async Task<ItemPhotoGetDTO> UpdateAsync(ItemPhotoPutDTO itemPhotoPutDTO)
         {
-            if (await _itemRepository.GetByIdAsync(itemPhotoPutDTO.Id) == null)
+            var existingPhoto = await _itemPhotoRepository.GetByIdAsync(itemPhotoPutDTO.Id);
+            if (existingPhoto == null)
                 throw new NotFoundException("Foto do Item não encontrado.");
 
             var itemPhoto = new ItemPhoto
             {
                 Id = itemPhotoPutDTO.Id,
-                FileName = itemPhotoPutDTO.FileName,
-                ContentType = itemPhotoPutDTO.ContentType,
-                Url = itemPhotoPutDTO.Url
+                Url = itemPhotoPutDTO.Url,
+                Order = itemPhotoPutDTO.Order,
+                ItemId = itemPhotoPutDTO.ItemId
             };
 
             var updatedItemPhoto = await _itemPhotoRepository.UpdateAsync(itemPhoto);
@@ -111,9 +107,9 @@ namespace NovoUsoApi.Services
             return new ItemPhotoGetDTO
             {
                 Id = updatedItemPhoto.Id,
-                FileName = updatedItemPhoto.FileName,
-                ContentType = updatedItemPhoto.ContentType,
-                Url = updatedItemPhoto.Url
+                Url = updatedItemPhoto.Url,
+                Order = updatedItemPhoto.Order,
+                ItemId = updatedItemPhoto.ItemId
             };
         }
     }

@@ -58,5 +58,7 @@ namespace NovoUsoApi.DTOs.Item
 
         [Required(ErrorMessage = "O identificador de categoria é obrigatório.")]
         public int CategoryId { get; set; }
+
+        public List<IFormFile>? Images { get; set; }
     }
 }

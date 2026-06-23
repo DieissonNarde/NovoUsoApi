@@ -8,16 +8,12 @@ namespace NovoUsoApi.DTOs.ItemPhoto
 {
     public class ItemPhotoPostDTO
     {
-        [Required(ErrorMessage = "O campo de nome do arquivo é obrigatório.")]
-        public string FileName { get; set; }
-
-        [Required(ErrorMessage = "O campo de tipo de conteúdo é obrigatório.")]
-        public string ContentType { get; set; }
-
         [Required(ErrorMessage = "O campo de URL é obrigatório.")]
         public string Url { get; set; }
 
         [Required(ErrorMessage = "O campo de ID do item é obrigatório.")]
         public int ItemId { get; set; }
+
+        public int Order { get; set; }
     }
 }

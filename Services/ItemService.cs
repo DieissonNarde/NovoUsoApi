@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NovoUsoApi.DTOs.Category;
 using NovoUsoApi.DTOs.Item;
+using NovoUsoApi.DTOs.ItemPhoto;
 using NovoUsoApi.DTOs.User;
 using NovoUsoApi.Interfaces;
 using NovoUsoApi.Middleawre.Errors;
@@ -17,14 +18,18 @@ namespace NovoUsoApi.Services
     public class ItemService : IItemService
     {
         private readonly IItemRepository _itemRepository;
+        private readonly IItemPhotoRepository _itemPhotoRepository;
         private readonly IUserRepository _userRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IWebHostEnvironment _env;
 
-        public ItemService(IItemRepository itemRepository, IUserRepository userRepository, ICategoryRepository categoryRepository)
+        public ItemService(IItemRepository itemRepository, IItemPhotoRepository itemPhotoRepository, IUserRepository userRepository, ICategoryRepository categoryRepository, IWebHostEnvironment env)
         {
             _itemRepository = itemRepository;
+            _itemPhotoRepository = itemPhotoRepository;
             _userRepository = userRepository;
             _categoryRepository = categoryRepository;
+            _env = env;
         }
 
         public async Task<ItemGetDTO> AddAsync(ItemPostDTO itemPostDTO)
@@ -34,6 +39,29 @@ namespace NovoUsoApi.Services
 
             if (await _categoryRepository.GetByIdAsync(itemPostDTO.CategoryId) == null)
                 throw new NotFoundException("Categoria não encrontada.");
+
+            // 1. Validação da quantidade de imagens
+            if (itemPostDTO.Images != null && itemPostDTO.Images.Count > 6)
+            {
+                throw new ArgumentException("Máximo de 6 imagens permitidas.");
+            }
+
+            // 2. Validações de tipo/tamanho (exemplo)
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+            if (itemPostDTO.Images != null)
+            {
+                foreach (var file in itemPostDTO.Images)
+                {
+                    var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+                    if (!allowedExtensions.Contains(ext))
+                        throw new ArgumentException($"Formato não permitido: {ext}");
+
+                    if (file.Length > maxFileSize)
+                        throw new ArgumentException($"Arquivo {file.FileName} excede 5MB.");
+                }
+            }
 
             var item = new Item
             {
@@ -56,6 +84,47 @@ namespace NovoUsoApi.Services
             };
 
             var createdItem = await _itemRepository.AddAsync(item);
+
+            // 4. Salvar as imagens e registrar no banco
+            if (itemPostDTO.Images != null && itemPostDTO.Images.Any())
+            {
+                // Define a pasta onde as imagens serão armazenadas (ex: wwwroot/uploads/items)
+                var webRootPath = _env.WebRootPath;
+                if (string.IsNullOrWhiteSpace(webRootPath))
+                    webRootPath = Path.Combine(_env.ContentRootPath, "uploads");
+
+                var uploadsFolder = Path.Combine(webRootPath, "items");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var imageList = new List<ItemPhoto>();
+                int order = 0;
+
+                foreach (var file in itemPostDTO.Images)
+                {
+                    // Gera um nome único para evitar conflitos
+                    var uniqueName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    // Caminho relativo para salvar no banco (ex: /uploads/items/guid_nome.jpg)
+                    var relativePath = $"/items/{uniqueName}";
+
+                    imageList.Add(new ItemPhoto
+                    {
+                        Url = relativePath,
+                        Order = order++,
+                        ItemId = item.Id
+                    });
+                }
+
+                await _itemPhotoRepository.AddAsync(imageList);
+            }
+
             return new ItemGetDTO
             {
                 Id = createdItem.Id,
@@ -101,7 +170,7 @@ namespace NovoUsoApi.Services
                 TypeOffer = deletedItem.TypeOffer,
                 Value = deletedItem.Value,
                 UserId = deletedItem.UserId,
-                CategoryId = deletedItem.CategoryId 
+                CategoryId = deletedItem.CategoryId
             };
 
         }
@@ -210,7 +279,8 @@ namespace NovoUsoApi.Services
             if (updatedItem == null)
                 return null;
             return new ItemGetDTO
-            {   Id = updatedItem.Id,
+            {
+                Id = updatedItem.Id,
                 Status = updatedItem.Status,
                 Title = updatedItem.Title,
                 Description = updatedItem.Description,

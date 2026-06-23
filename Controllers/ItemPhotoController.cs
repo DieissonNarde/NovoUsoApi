@@ -19,7 +19,7 @@ namespace NovoUsoApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItemPhoto(int itemId, ItemPhotoPostDTO itemPhotoPostDTO)
+        public async Task<IActionResult> AddItemPhoto(ItemPhotoPostDTO itemPhotoPostDTO)
         {
             var addPhoto = await _itemPhotoService.AddAsync(itemPhotoPostDTO);
             return Ok(new { message = "Foto adicionada ao item com sucesso.", addPhoto });
