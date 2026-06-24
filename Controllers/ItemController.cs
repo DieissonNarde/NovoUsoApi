@@ -49,11 +49,14 @@ namespace NovoUsoApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllItems(PaginationParams paginationParams)
+        public async Task<ActionResult> GetAllItems([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
-            var items = await _itemService.GetAllAsync(paginationParams.PageNumber, paginationParams.PageSize);
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1 || pageSize > 100) pageSize = 100;
 
-            Response.AddPaginationHeader(new PaginationHeader(paginationParams.PageNumber, paginationParams.PageSize, items.TotalCount, items.TotalPages));
+            var items = await _itemService.GetAllAsync(pageNumber, pageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(pageNumber, pageSize, items.TotalCount, items.TotalPages));
             
             return Ok(items);
         }

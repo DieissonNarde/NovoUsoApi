@@ -16,5 +16,6 @@ namespace NovoUsoApi.DTOs.Bid
         public ProposalType ProposalType { get; set; }
         public int ItemId { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; } = null!;
     }
 }

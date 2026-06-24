@@ -40,12 +40,18 @@ namespace NovoUsoApi.Repositories
 
         public async Task<List<Bid>> GetAllAsync()
         {
-            return await _context.Bid.ToListAsync();
+            return await _context.Bid
+                .Include(x => x.User)
+                .Include(x => x.Item)
+                .ToListAsync();
         }
 
         public async Task<Bid> GetByIdAsync(int id)
         {
-            return await _context.Bid.FindAsync(id);
+            return await _context.Bid
+                .Include(x => x.User)
+                .Include(x => x.Item)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Bid> UpdateAsync(Bid bid)

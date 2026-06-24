@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NovoUsoApi.Models;
 using NovoUsoApi.Models.Enums;
+using NovoUsoApi.DTOs.ItemPhoto;
 
 namespace NovoUsoApi.DTOs.Item
 {
@@ -27,5 +28,6 @@ namespace NovoUsoApi.DTOs.Item
         public string? CancellationReason { get; set; }
         public int UserId { get; set; }
         public int CategoryId { get; set; }
+        public List<ItemPhotoGetDTO> Photos { get; set; }
     }
 }

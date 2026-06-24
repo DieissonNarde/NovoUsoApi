@@ -51,6 +51,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleawre>();
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseCors("PermitirFrontend");

@@ -42,13 +42,26 @@ namespace NovoUsoApi.Repositories
 
         public async Task<PagedList<Item>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var query = _context.Item.Where(x => x.Status == Models.Enums.ItemStatus.Published).AsNoTracking();
+            var query = _context.Item
+                .Where(x => x.Status == Models.Enums.ItemStatus.Published)
+                .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Category)
+                .Include(x => x.Photos)
+                .Include(x => x.Bids)
+                    .ThenInclude(b => b.User);
             return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
         }
 
         public async Task<Item> GetByIdAsync(int id)
         {
-            return await _context.Item.FindAsync(id);
+            return await _context.Item
+                .Include(x => x.User)
+                .Include(x => x.Category)
+                .Include(x => x.Photos)
+                .Include(x => x.Bids)
+                    .ThenInclude(b => b.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Item> UpdateAsync(Item item)

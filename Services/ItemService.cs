@@ -32,6 +32,7 @@ namespace NovoUsoApi.Services
             _env = env;
         }
 
+
         public async Task<ItemGetDTO> AddAsync(ItemPostDTO itemPostDTO)
         {
             if (await _userRepository.GetByIdAsync(itemPostDTO.UserId) == null)
@@ -63,6 +64,8 @@ namespace NovoUsoApi.Services
                 }
             }
 
+            var imageList = new List<ItemPhoto>();
+
             var item = new Item
             {
                 Title = itemPostDTO.Title,
@@ -91,13 +94,12 @@ namespace NovoUsoApi.Services
                 // Define a pasta onde as imagens serão armazenadas (ex: wwwroot/uploads/items)
                 var webRootPath = _env.WebRootPath;
                 if (string.IsNullOrWhiteSpace(webRootPath))
-                    webRootPath = Path.Combine(_env.ContentRootPath, "uploads");
+                    webRootPath = Path.Combine(_env.ContentRootPath, "wwwroot");
 
                 var uploadsFolder = Path.Combine(webRootPath, "items");
                 if (!Directory.Exists(uploadsFolder))
                     Directory.CreateDirectory(uploadsFolder);
 
-                var imageList = new List<ItemPhoto>();
                 int order = 0;
 
                 foreach (var file in itemPostDTO.Images)
@@ -111,7 +113,7 @@ namespace NovoUsoApi.Services
                         await file.CopyToAsync(stream);
                     }
 
-                    // Caminho relativo para salvar no banco (ex: /uploads/items/guid_nome.jpg)
+                    // Caminho relativo para servir no navegador via wwwroot/items
                     var relativePath = $"/items/{uniqueName}";
 
                     imageList.Add(new ItemPhoto
@@ -143,7 +145,14 @@ namespace NovoUsoApi.Services
                 TypeOffer = createdItem.TypeOffer,
                 Value = createdItem.Value,
                 UserId = createdItem.UserId,
-                CategoryId = createdItem.CategoryId
+                CategoryId = createdItem.CategoryId,
+                Photos = imageList.Select(p => new ItemPhotoGetDTO
+                {
+                    Id = p.Id,
+                    Url = p.Url,
+                    Order = p.Order,
+                    ItemId = p.ItemId
+                }).ToList()
             };
         }
 
@@ -170,7 +179,14 @@ namespace NovoUsoApi.Services
                 TypeOffer = deletedItem.TypeOffer,
                 Value = deletedItem.Value,
                 UserId = deletedItem.UserId,
-                CategoryId = deletedItem.CategoryId
+                CategoryId = deletedItem.CategoryId,
+                Photos = deletedItem.Photos.Select(p => new ItemPhotoGetDTO
+                {
+                    Id = p.Id,
+                    Url = p.Url,
+                    Order = p.Order,
+                    ItemId = p.ItemId
+                }).ToList()
             };
 
         }
@@ -207,7 +223,14 @@ namespace NovoUsoApi.Services
                     {
                         Id = item.Category.Id,
                         Name = item.Category.Name
-                    }
+                    },
+                    Photos = item.Photos.Select(p => new ItemPhotoGetDTO
+                    {
+                        Id = p.Id,
+                        Url = p.Url,
+                        Order = p.Order,
+                        ItemId = p.ItemId
+                    }).ToList()
                 });
             }
             return new PagedList<ItemGetDetailDTO>(itemGetDTOs, items.CurrentPage, items.PageSize, items.TotalCount);
@@ -272,7 +295,7 @@ namespace NovoUsoApi.Services
                 DurationDays = itemPutDTO.DurationDays,
                 TypeOffer = itemPutDTO.TypeOffer,
                 Value = itemPutDTO.Value,
-                CategoryId = itemPutDTO.CategoryId,
+                CategoryId = itemPutDTO.CategoryId
             };
 
             var updatedItem = await _itemRepository.UpdateAsync(item);
@@ -294,7 +317,14 @@ namespace NovoUsoApi.Services
                 DurationDays = updatedItem.DurationDays,
                 TypeOffer = updatedItem.TypeOffer,
                 Value = updatedItem.Value,
-                CategoryId = updatedItem.CategoryId
+                CategoryId = updatedItem.CategoryId,
+                Photos = updatedItem.Photos?.Select(p => new ItemPhotoGetDTO
+                {
+                    Id = p.Id,
+                    Url = p.Url,
+                    Order = p.Order,
+                    ItemId = p.ItemId
+                }).ToList() ?? new List<ItemPhotoGetDTO>()
             };
         }
     }
